@@ -430,3 +430,29 @@ tbody tr.is-crypto:hover td{background:color-mix(in oklab, var(--row-crypto) 88%
   td.cell-spark, td.cell-country{display:none}
   .kv{grid-template-columns:1fr}
 }
+
+@media (max-width: 720px){
+  .topbar__inner{padding:10px 12px;flex-wrap:wrap}
+  .topbar__actions{width:100%;flex-wrap:wrap}
+  .search{min-width:0;flex:1 1 100%}
+  .container{padding:12px}
+  .banner{height:64px}
+  .title{font-size:24px}
+  .subtabs{gap:8px}
+  thead th{padding:10px 10px}
+  tbody td{padding:10px 10px}
+  .th--name{min-width:220px}
+  .th--num{width:120px}
+  .table-wrap{overflow-x:auto;overflow-y:hidden;touch-action:pan-x}
+  .table{min-width:720px}
+  .pager{flex-direction:column;align-items:stretch}
+  .pager__left{justify-content:space-between}
+  .pager__right{justify-content:flex-start}
+}
+
+@media (max-width: 420px){
+  .topbar__actions{gap:8px}
+  .btn{padding:9px 10px}
+  .icon-btn{width:36px;height:36px}
+  .page-btn{min-width:36px;padding:8px 8px}
+}
