@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Top Assets by Market Cap</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar__inner">
+        <div class="brand">
+          <div class="brand__logo" aria-hidden="true"></div>
+          <div class="brand__name">CompaniesMarketCap</div>
+        </div>
+
+        <nav class="nav">
+          <a class="nav__link is-active" href="#" data-nav="global">Global ranking</a>
+          <a class="nav__link" href="#" data-nav="countries">Ranking by countries</a>
+          <a class="nav__link" href="#" data-nav="categories">Ranking by categories</a>
+          <a class="nav__link" href="#" data-nav="etfs">ETFs</a>
+        </nav>
+
+        <div class="topbar__actions">
+          <button class="btn btn--ghost" id="signInBtn" type="button">Sign In</button>
+
+          <label class="select">
+            <select id="languageSelect" aria-label="Language">
+              <option value="en" selected>English</option>
+              <option value="zh">中文</option>
+            </select>
+          </label>
+
+          <label class="select">
+            <select id="currencySelect" aria-label="Currency">
+              <option value="USD" selected>USD</option>
+              <option value="EUR">EUR</option>
+              <option value="CNY">CNY</option>
+            </select>
+          </label>
+
+          <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme">
+            <span class="icon-btn__dot" aria-hidden="true"></span>
+          </button>
+
+          <div class="search">
+            <input
+              id="searchInput"
+              class="search__input"
+              type="search"
+              placeholder="Company name, ticker..."
+              autocomplete="off"
+            />
+            <button class="search__btn" id="clearSearchBtn" type="button" aria-label="Clear search">×</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="summary">
+        <div class="summary__item">
+          <div class="summary__label" id="summaryCompaniesLabel">Companies:</div>
+          <div class="summary__value" id="summaryCompaniesValue">—</div>
+        </div>
+        <div class="summary__item">
+          <div class="summary__label" id="summaryTotalLabel">total market cap:</div>
+          <div class="summary__value" id="summaryTotalValue">—</div>
+        </div>
+        <div class="summary__item summary__item--spacer"></div>
+
+        <div class="summary__item">
+          <label class="select select--small">
+            <select id="dataSourceSelect" aria-label="Data source">
+              <option value="static" selected>Static data</option>
+              <option value="remote">Fetch from website</option>
+            </select>
+          </label>
+        </div>
+        <div class="summary__item">
+          <button class="btn btn--small" id="refreshBtn" type="button" disabled>Refresh</button>
+        </div>
+        <div class="summary__item">
+          <div class="summary__meta" id="updatedAt"> </div>
+        </div>
+      </section>
+
+      <section class="data-center" aria-label="Data center">
+        <div class="data-center__head">
+          <h2 class="data-center__title" id="dataCenterTitle">数据获取中心</h2>
+          <div class="data-center__actions">
+            <a class="link" href="https://companiesmarketcap.com/assets-by-market-cap/" target="_blank" rel="noreferrer">
+              目标网站
+            </a>
+            <span class="dot" aria-hidden="true"></span>
+            <span class="muted" id="dcApiText">本地API：/api/assets-by-market-cap</span>
+          </div>
+        </div>
+
+        <div class="kv">
+          <div class="kv__row">
+            <div class="kv__k">数据源</div>
+            <div class="kv__v" id="dcSourceValue">—</div>
+          </div>
+          <div class="kv__row">
+            <div class="kv__k">状态</div>
+            <div class="kv__v" id="dcStatusValue">—</div>
+          </div>
+          <div class="kv__row">
+            <div class="kv__k">条目数</div>
+            <div class="kv__v" id="dcCountValue">—</div>
+          </div>
+          <div class="kv__row">
+            <div class="kv__k">错误</div>
+            <div class="kv__v kv__v--pre" id="dcErrorValue">—</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="hero">
+        <div class="banner" role="img" aria-label="Banner"></div>
+        <h1 class="title" id="pageTitle">Top Assets by Market Cap</h1>
+        <div class="subtabs" role="tablist" aria-label="Categories">
+          <button class="pill is-active" type="button" data-category="all" role="tab" aria-selected="true">
+            All assets
+          </button>
+          <button class="pill" type="button" data-category="public_companies" role="tab" aria-selected="false">
+            public companies
+          </button>
+          <button class="pill" type="button" data-category="precious_metals" role="tab" aria-selected="false">
+            precious metals
+          </button>
+          <button class="pill" type="button" data-category="cryptocurrencies" role="tab" aria-selected="false">
+            cryptocurrencies
+          </button>
+          <button class="pill" type="button" data-category="etfs" role="tab" aria-selected="false">
+            ETFs
+          </button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="table-wrap" role="region" aria-label="Assets table" tabindex="0">
+          <table class="table" id="assetsTable">
+            <thead>
+              <tr>
+                <th class="th th--rank" data-sort="rank">
+                  <span>Rank</span>
+                  <span class="sort" aria-hidden="true"></span>
+                </th>
+                <th class="th th--name" data-sort="name">
+                  <span>Name</span>
+                  <span class="sort" aria-hidden="true"></span>
+                </th>
+                <th class="th th--num" data-sort="marketCap">
+                  <span>Market Cap</span>
+                  <span class="sort" aria-hidden="true"></span>
+                </th>
+                <th class="th th--num" data-sort="price">
+                  <span>Price</span>
+                  <span class="sort" aria-hidden="true"></span>
+                </th>
+                <th class="th th--num" data-sort="todayChangePercent">
+                  <span>Today</span>
+                  <span class="sort" aria-hidden="true"></span>
+                </th>
+                <th class="th th--spark">
+                  <span>Price (30 days)</span>
+                </th>
+                <th class="th th--country">
+                  <span>Country</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="assetsTbody"></tbody>
+          </table>
+
+          <div class="state" id="tableState" hidden>
+            <div class="state__title" id="stateTitle"></div>
+            <div class="state__desc" id="stateDesc"></div>
+            <div class="state__actions" id="stateActions"></div>
+          </div>
+        </div>
+
+        <div class="pager">
+          <div class="pager__left">
+            <label class="select select--small">
+              <select id="pageSizeSelect" aria-label="Rows per page">
+                <option value="10">10</option>
+                <option value="20" selected>20</option>
+                <option value="50">50</option>
+              </select>
+            </label>
+            <div class="pager__meta" id="pagerMeta"> </div>
+          </div>
+          <div class="pager__right" id="pagerButtons"></div>
+        </div>
+      </section>
+    </main>
+
+    <div class="modal" id="modal" hidden>
+      <div class="modal__mask" data-close="true"></div>
+      <div class="modal__card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal__header">
+          <div class="modal__title" id="modalTitle"> </div>
+          <button class="icon-btn" id="modalCloseBtn" type="button" aria-label="Close">×</button>
+        </div>
+        <div class="modal__body" id="modalBody"></div>
+        <div class="modal__footer">
+          <button class="btn" id="modalOkBtn" type="button">OK</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>
